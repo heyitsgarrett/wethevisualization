@@ -32,8 +32,6 @@ function loadPetitionData(petition_id) {
 }
 
 function drawMap(data) {
-    // console.log(data.open_calais);
-
     // Extract Countries from the Open Calais result:
     var locations = [];
     for(var key in data.open_calais) {
@@ -48,11 +46,12 @@ function drawMap(data) {
         }
     }
 
+    var geoJson = [];
     for(var i = 0; i < locations.length; i++) {
 
         var loc = locations[i];
 
-        L.mapbox.markerLayer({
+        geoJson.push({
             type: 'Feature',
             geometry: {
                 type: 'Point',
@@ -62,9 +61,12 @@ function drawMap(data) {
                 title: loc.name,
                 'marker-color': '#cc0033'
             }
-        }).addTo(map);
-
+        });
     };
+
+    map.markerLayer.setGeoJSON(geoJson);
+
+    map.fitBounds(map.markerLayer.getBounds());
 
 }
 
