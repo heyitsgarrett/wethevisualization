@@ -1,7 +1,7 @@
 var map = L.mapbox.map('map', 'wethepeopleapi.map-r9kmecu5');
 
 function loadPetitionData() {
-    $.getJSON('http://wetheentities.herokuapp.com/petitions/51942b9b2f2c888e2f00000c.json', function(data) {
+    $.getJSON('http://wetheentities.herokuapp.com/petitions/516c7ffd00e579f40500000d.json', function(data) {
         if(data.analysis_complete) {
             $('#loading').remove();
             drawMap(data);
@@ -13,7 +13,7 @@ function loadPetitionData() {
 }
 
 function drawMap(data) {
-    // console.log(data.open_calais);
+    console.log(data.open_calais);
 
     // Extract Countries from the Open Calais result:
     var locations = [];
@@ -21,7 +21,7 @@ function drawMap(data) {
         var value = data.open_calais[key];
         if(value._typeGroup == 'entities') {
             var entity = value;
-            if(entity._type == 'Country') {
+            if(entity._type == 'Country' || entity._type == 'City') {
                 if(entity.resolutions) {
                     locations.push(entity.resolutions[0]);
                 }
