@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Visualizing We the People</title>
   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
   <script src='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.js'></script>
@@ -16,12 +17,29 @@
   <style>
     body { margin:0; padding:0; }
     #map { position:absolute; top:0; bottom:0; width:100%; }
+    #map a {
+      color: #000;
+    }
+    h1 {
+      bottom: 20px;
+      color: white;
+      position: absolute;
+      left: 20px;
+      margin: 0;
+      padding: 0;
+      z-index: 10;
+    }
+    a {
+      color: white;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
 
 <div id='map'></div>
 
+<h1>Visualizing locations mentioned in <span id="issue_name"></span> petitions on <a href="https://petitions.whitehouse.gov/" target="_blank">We the People</a></h1>
 
 <script>var map = L.mapbox.map('map', 'wethepeopleapi.map-dsihvyo7');</script>
 <script src='js/site.js'></script>
@@ -34,6 +52,10 @@ $(document).ready(function() {
     } else {
         // No id error
     }
+
+    $('#issue_name').html(issue_id);
+
+    document.title = 'Visualizing ' + issue_id + ' in We the People';
 
 });
 </script>
