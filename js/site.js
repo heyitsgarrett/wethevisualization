@@ -1,7 +1,13 @@
 var map = L.mapbox.map('map', 'wethepeopleapi.map-r9kmecu5');
 
-function loadPetitionData() {
-    $.getJSON('http://wetheentities.herokuapp.com/petitions/516c7ffd00e579f40500000d.json', function(data) {
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+
+function loadPetitionData(petition_id) {
+    $.getJSON('http://wetheentities.herokuapp.com/petitions/' + petition_id + '.json', function(data) {
         if(data.analysis_complete) {
             $('#loading').remove();
             drawMap(data);
@@ -51,9 +57,13 @@ function drawMap(data) {
 
 
 $(document).ready(function() {
+    var petition_id = getURLParameter('id');
 
-    loadPetitionData();
-
+    if(petition_id !== null) {
+        loadPetitionData(petition_id);
+    } else {
+        // No id error
+    }
 
 });
 
