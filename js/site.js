@@ -1,5 +1,3 @@
-var map = L.mapbox.map('map', 'wethepeopleapi.map-r9kmecu5');
-
 var globalLocations = [];
 
 function getURLParameter(name) {
@@ -67,9 +65,8 @@ function loadPetitionData(petition_id, markerStyle) {
 function drawMap(data, markerStyle) {
 
     var circleOptions = {
-        radius: 15,
-        fillColor: "#ce0000",
-        color: "#000",
+        radius: 20,
+        fillColor: "#fff800",
         weight: 0,
         fillOpacity: 0.2
     };
@@ -119,9 +116,8 @@ function drawMap(data, markerStyle) {
                 pointToLayer: function (feature, latlng) {
                     return L.circleMarker(latlng, {
                         radius: 3,
-                        fillColor: "#ce0000",
-                        color: '#ffffff',
-                        weight: 1,
+                        fillColor: "#fff800",
+                        weight: 0,
                         fillOpacity: 1.0
                     });
                 }
