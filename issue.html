@@ -26,10 +26,10 @@
 <script src='js/site.js'></script>
 <script>
 $(document).ready(function() {
-    var petition_id = getURLParameter('id');
+    var issue_id = getURLParameter('issue');
 
-    if(petition_id !== null) {
-        loadPetitionData(petition_id,'standard');
+    if(issue_id !== null) {
+        loadIssueData(issue_id, 'cluster');
     } else {
         // No id error
     }
