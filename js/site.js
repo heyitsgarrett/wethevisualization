@@ -7,19 +7,32 @@ function getURLParameter(name) {
 }
 
 function loadPetitionData(petition_id) {
-    $.getJSON('http://wetheentities.herokuapp.com/petitions/' + petition_id + '.json', function(data) {
-        if(data.analysis_complete) {
-            $('#loading').remove();
-            drawMap(data);
-        }
-        else {
-            setTimeout(loadPetitionData, 2000);
+    var url = 'http://wetheentities.herokuapp.com/petitions/' + petition_id + '.js';
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        jsonpCallback: 'jsonCallback',
+        contentType: "application/json",
+        dataType: 'jsonp',
+        success: function(data) {
+            if(data.analysis_complete) {
+                drawMap(data);
+            }
+            else {
+                setTimeout(loadPetitionData, 2000);
+            }
+        },
+        error: function(e) {
+            console.log(e.message);
         }
     });
+
 }
 
 function drawMap(data) {
-    console.log(data.open_calais);
+    // console.log(data.open_calais);
 
     // Extract Countries from the Open Calais result:
     var locations = [];
