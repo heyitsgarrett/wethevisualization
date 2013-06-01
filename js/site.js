@@ -68,7 +68,7 @@ function drawMap(data, markerStyle) {
         radius: 20,
         fillColor: "#fff800",
         weight: 0,
-        fillOpacity: 0.2
+        fillOpacity: 0.1
     };
 
 
