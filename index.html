@@ -47,12 +47,11 @@
 <script>
 $(document).ready(function() {
     var issue_id = getURLParameter('issue');
-
-    if(issue_id !== null) {
-        loadIssueData(issue_id, 'cluster');
-    } else {
-        // No id error
+    if(!issue_id || issue_id === "null") {
+      issue_id = "Foreign Policy";
     }
+
+    loadIssueData(issue_id, 'cluster');
 
     $('#issue_name').html(issue_id);
 

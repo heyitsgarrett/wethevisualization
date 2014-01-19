@@ -8,9 +8,6 @@ function getURLParameter(name) {
 }
 
 function loadIssueData(issue_id, markerStyle) {
-    if(issue_id === null) {
-        issue_id = 'Foreign%20Policy';
-    }
     var url = 'http://www.wetheentities.org/petitions.js?analyze=false&limit=1000&issues[]=' + encodeURIComponent(issue_id);
 
     $.ajax({
