@@ -11,7 +11,7 @@ function loadIssueData(issue_id, markerStyle) {
     if(issue_id === null) {
         issue_id = 'Foreign%20Policy';
     }
-    var url = 'http://wetheentities.herokuapp.com/petitions.js?analyze=false&limit=1000&issues[]=' + encodeURIComponent(issue_id);
+    var url = 'http://www.wetheentities.org/petitions.js?analyze=false&limit=1000&issues[]=' + encodeURIComponent(issue_id);
 
     $.ajax({
         type: 'GET',
@@ -37,7 +37,7 @@ function loadIssueData(issue_id, markerStyle) {
 }
 
 function loadPetitionData(petition_id, markerStyle) {
-    var url = 'http://wetheentities.herokuapp.com/petitions/' + petition_id + '.js';
+    var url = 'http://www.wetheentities.org/petitions/' + petition_id + '.js';
 
     $.ajax({
         type: 'GET',
