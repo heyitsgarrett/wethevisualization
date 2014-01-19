@@ -1,4 +1,5 @@
 var globalLocations = [];
+var DEBUG = false;
 
 function getURLParameter(name) {
     return decodeURI(
@@ -21,12 +22,16 @@ function loadIssueData(issue_id, markerStyle) {
         dataType: 'jsonp',
         success: function(data) {
             for(var x =0; x< data.petitions.length; x++) {
-                // console.log(data.petitions[x]);
+                if(DEBUG) {
+                    console.log(data.petitions[x]);
+                }
                 loadPetitionData(data.petitions[x].attributes.id, markerStyle);
             }
         },
         error: function(e) {
-            // console.log(e.message);
+            if(DEBUG) {
+                console.log(e.message);
+            }
         }
     });
 }
@@ -50,7 +55,9 @@ function loadPetitionData(petition_id, markerStyle) {
             }
         },
         error: function(e) {
-            // console.log(e.message);
+            if(DEBUG) {
+                console.log(e.message);
+            }
         }
     });
 
