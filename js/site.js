@@ -10,7 +10,7 @@ function loadIssueData(issue_id, markerStyle) {
     if(issue_id === null) {
         issue_id = 'Foreign%20Policy';
     }
-    var url = 'http://wetheentities.herokuapp.com/petitions.js?issues[]=' + encodeURIComponent(issue_id);
+    var url = 'http://wetheentities.herokuapp.com/petitions.js?analyze=false&limit=1000&issues[]=' + encodeURIComponent(issue_id);
 
     $.ajax({
         type: 'GET',
@@ -20,15 +20,9 @@ function loadIssueData(issue_id, markerStyle) {
         contentType: "application/json",
         dataType: 'jsonp',
         success: function(data) {
-            if(data.analysis_complete) {
-                for(var x =0; x< data.petitions.length; x++) {
-                    // console.log(data.petitions[x]);
-                    loadPetitionData(data.petitions[x].attributes.id, markerStyle);
-                }
-
-            }
-            else {
-                setTimeout(loadIssueData(issue_id), 2000);
+            for(var x =0; x< data.petitions.length; x++) {
+                // console.log(data.petitions[x]);
+                loadPetitionData(data.petitions[x].attributes.id, markerStyle);
             }
         },
         error: function(e) {
