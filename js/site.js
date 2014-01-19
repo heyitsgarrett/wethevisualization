@@ -1,19 +1,74 @@
-var map = L.mapbox.map('map', 'wethepeopleapi.map-r9kmecu5');
+var globalLocations = [];
+var DEBUG = false;
 
-function loadPetitionData() {
-    $.getJSON('http://wetheentities.herokuapp.com/petitions/516c7ffd00e579f40500000d.json', function(data) {
-        if(data.analysis_complete) {
-            $('#loading').remove();
-            drawMap(data);
-        }
-        else {
-            setTimeout(loadPetitionData, 2000);
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+
+function loadIssueData(issue_id, markerStyle) {
+    var url = 'http://www.wetheentities.org/petitions.js?analyze=false&limit=1000&issues[]=' + encodeURIComponent(issue_id);
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        jsonpCallback: 'callback',
+        contentType: "application/json",
+        dataType: 'jsonp',
+        success: function(data) {
+            for(var x =0; x< data.petitions.length; x++) {
+                if(DEBUG) {
+                    console.log(data.petitions[x]);
+                }
+                loadPetitionData(data.petitions[x].attributes.id, markerStyle);
+            }
+        },
+        error: function(e) {
+            if(DEBUG) {
+                console.log(e.message);
+            }
         }
     });
 }
 
-function drawMap(data) {
-    console.log(data.open_calais);
+function loadPetitionData(petition_id, markerStyle) {
+    var url = 'http://www.wetheentities.org/petitions/' + petition_id + '.js';
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        jsonpCallback: 'callback' + petition_id,
+        contentType: "application/json",
+        dataType: 'jsonp',
+        success: function(data) {
+            if(data.analysis_complete) {
+                drawMap(data, markerStyle);
+            }
+            else {
+                setTimeout(loadPetitionData, 2000);
+            }
+        },
+        error: function(e) {
+            if(DEBUG) {
+                console.log(e.message);
+            }
+        }
+    });
+
+}
+
+function drawMap(data, markerStyle) {
+
+    var circleOptions = {
+        radius: 20,
+        fillColor: "#fff800",
+        weight: 0,
+        fillOpacity: 0.1
+    };
+
 
     // Extract Countries from the Open Calais result:
     var locations = [];
@@ -29,51 +84,53 @@ function drawMap(data) {
         }
     }
 
+    var geoJson = [];
     for(var i = 0; i < locations.length; i++) {
 
         var loc = locations[i];
 
-        L.mapbox.markerLayer({
-            type: 'Feature',
-            geometry: {
-                type: 'Point',
-                coordinates: [loc.longitude, loc.latitude]
-            },
-            properties: {
-                title: loc.name,
-                'marker-color': '#cc0033'
-            }
-        }).addTo(map);
+        var feature = {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [loc.longitude, loc.latitude]
+                },
+                properties: {
+                    title: loc.name,
+                    'marker-color': '#cc0033'
+                }
+            };
 
+        if(markerStyle === 'cluster') {
+
+            // Group markers
+            L.geoJson(feature, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, circleOptions);
+                }
+            }).addTo(map);
+
+            L.geoJson(feature, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, {
+                        radius: 3,
+                        fillColor: "#fff800",
+                        weight: 0,
+                        fillOpacity: 1.0
+                    });
+                }
+            }).addTo(map);
+
+
+        } else {
+            geoJson.push(feature);
+
+            map.markerLayer.setGeoJSON(geoJson);
+
+            map.fitBounds(map.markerLayer.getBounds());
+        }
     };
+
 
 }
 
-
-$(document).ready(function() {
-
-    loadPetitionData();
-
-
-});
-
-
-// L.mapbox.markerLayer({
-//     // this feature is in the GeoJSON format: see geojson.org
-//     // for the full specification
-//     type: 'Feature',
-//     geometry: {
-//         type: 'Point',
-//         // coordinates here are in longitude, latitude order because
-//         // x, y is the standard for GeoJSON and many formats
-//         coordinates: [-77, 37.9]
-//     },
-//     properties: {
-//         title: 'A Single Marker',
-//         description: 'Just one of me',
-//         // one can customize markers by adding simplestyle properties
-//         // http://mapbox.com/developers/simplestyle/
-//         'marker-size': 'large',
-//         'marker-color': '#f0a'
-//     }
-// }).addTo(map);
